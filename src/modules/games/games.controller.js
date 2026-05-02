@@ -7,7 +7,18 @@ function isPositiveNumber(value) {
 }
 
 function isValidDateFormat(value) {
-  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+  if (typeof value !== "string" || !/^\d{2}-\d{2}-\d{4}$/.test(value)) {
+    return false;
+  }
+
+  const [day, month, year] = value.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 function validateGameData(game, isUpdate = false) {
@@ -42,7 +53,9 @@ function validateGameData(game, isUpdate = false) {
   }
 
   if (!isValidDateFormat(game.acquiredDate)) {
-    errors.push("La fecha de adquisicion debe tener formato YYYY-MM-DD.");
+    errors.push(
+      "La fecha de adquisicion debe tener formato DD-MM-YYYY. Ejemplo: 20-04-2025."
+    );
   }
 
   if (!validConditions.includes(game.condition)) {
@@ -53,8 +66,13 @@ function validateGameData(game, isUpdate = false) {
 }
 
 function getAllGames(req, res) {
+  if (req.query.name) {
+    const games = gamesService.findByName(req.query.name);
+    return res.status(200).json(games);
+  }
+
   const games = gamesService.getAll();
-  res.status(200).json(games);
+  return res.status(200).json(games);
 }
 
 function getGameById(req, res) {
@@ -113,6 +131,42 @@ function updateGame(req, res) {
   return res.status(200).json(updatedGame);
 }
 
+function patchGame(req, res) {
+  const id = req.params.id;
+  const currentGame = gamesService.findById(id);
+
+  if (!currentGame) {
+    return res.status(404).json({ message: "Juego no encontrado." });
+  }
+
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({
+      message: "Debe enviar al menos un campo para actualizar.",
+    });
+  }
+
+  if (req.body.id && req.body.id !== id) {
+    return res.status(400).json({
+      message: "El id del cuerpo no coincide con el id de la ruta.",
+    });
+  }
+
+  const gameData = {
+    ...currentGame,
+    ...req.body,
+    id,
+  };
+
+  const errors = validateGameData(gameData, true);
+
+  if (errors.length > 0) {
+    return res.status(400).json({ message: "Datos invalidos.", errors });
+  }
+
+  const updatedGame = gamesService.update(id, gameData);
+  return res.status(200).json(updatedGame);
+}
+
 function deleteGame(req, res) {
   const deletedGame = gamesService.remove(req.params.id);
 
@@ -131,5 +185,6 @@ module.exports = {
   getGameById,
   createGame,
   updateGame,
+  patchGame,
   deleteGame,
 };

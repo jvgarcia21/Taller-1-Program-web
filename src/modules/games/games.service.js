@@ -5,7 +5,7 @@ let games = [
     minPlayers: 3,
     maxPlayers: 4,
     avgDurationMinutes: 90,
-    acquiredDate: "2024-08-15",
+    acquiredDate: "15-08-2024",
     condition: "lightly_used",
   },
   {
@@ -14,7 +14,7 @@ let games = [
     minPlayers: 2,
     maxPlayers: 5,
     avgDurationMinutes: 60,
-    acquiredDate: "2025-01-10",
+    acquiredDate: "10-01-2025",
     condition: "perfect",
   },
 ];
@@ -25,6 +25,12 @@ function getAll() {
 
 function findById(id) {
   return games.find((game) => game.id === id);
+}
+
+function findByName(name) {
+  const search = name.toLowerCase();
+
+  return games.filter((game) => game.name.toLowerCase().includes(search));
 }
 
 function create(game) {
@@ -64,6 +70,7 @@ function remove(id) {
 module.exports = {
   getAll,
   findById,
+  findByName,
   create,
   update,
   remove,
