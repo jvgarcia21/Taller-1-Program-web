@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD de juegos de mesa</title>
+</head>
+<body>
+  <header>
+    <h1>CRUD de juegos de mesa</h1>
+    <p>Interfaz HTML y JS conectada al servidor del Taller 1.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="form-title">
+      <h2 id="form-title">Registrar juego</h2>
+
+      <form id="game-form">
+        <div>
+          <label for="id">Id</label>
+          <input type="text" id="id" name="id" required placeholder="ejemplo: azul">
+        </div>
+
+        <div>
+          <label for="name">Nombre</label>
+          <input type="text" id="name" name="name" required placeholder="Azul">
+        </div>
+
+        <div>
+          <label for="minPlayers">Minimo de jugadores</label>
+          <input type="number" id="minPlayers" name="minPlayers" min="1" required>
+        </div>
+
+        <div>
+          <label for="maxPlayers">Maximo de jugadores</label>
+          <input type="number" id="maxPlayers" name="maxPlayers" min="1" required>
+        </div>
+
+        <div>
+          <label for="avgDurationMinutes">Duracion promedio en minutos</label>
+          <input type="number" id="avgDurationMinutes" name="avgDurationMinutes" min="1" required>
+        </div>
+
+        <div>
+          <label for="acquiredDate">Fecha de adquisicion</label>
+          <input type="text" id="acquiredDate" name="acquiredDate" required placeholder="DD-MM-YYYY">
+        </div>
+
+        <div>
+          <label for="condition">Estado</label>
+          <select id="condition" name="condition" required>
+            <option value="perfect">Perfecto</option>
+            <option value="lightly_used">Ligeramente usado</option>
+            <option value="worn">Gastado</option>
+            <option value="damaged">Danado</option>
+          </select>
+        </div>
+
+        <button type="submit" id="submit-button">Crear juego</button>
+        <button type="button" id="cancel-edit-button" hidden>Cancelar edicion</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="search-title">
+      <h2 id="search-title">Buscar juegos</h2>
+
+      <form id="search-form">
+        <label for="search-name">Buscar por nombre</label>
+        <input type="search" id="search-name" name="search-name" placeholder="Catan">
+        <button type="submit">Buscar</button>
+        <button type="button" id="clear-search-button">Limpiar busqueda</button>
+      </form>
+    </section>
+
+    <section aria-live="polite" aria-atomic="true">
+      <p id="message"></p>
+    </section>
+
+    <section aria-labelledby="list-title">
+      <h2 id="list-title">Juegos registrados</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Jugadores</th>
+            <th scope="col">Duracion</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="games-table-body">
+          <tr>
+            <td colspan="7">Cargando juegos...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
